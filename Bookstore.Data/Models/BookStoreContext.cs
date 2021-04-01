@@ -16,5 +16,8 @@ namespace Bookstore.Data.Models
         }
 
         public DbSet<Book> Books { get; set; }
+        public DbSet<Book> Cost { get; set; }
+
+
     }
 }

@@ -1,12 +1,7 @@
 ﻿using Bookstore.Data.Interfaces;
 using Bookstore.Data.Models;
-using Bookstore.Data.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookStoreAPI.Controllers
 {
@@ -67,6 +62,56 @@ namespace BookStoreAPI.Controllers
             if (ubook != null)
             {
                 return ubook;
+            }
+            return NotFound();
+        }
+
+        [HttpGet]
+        [Route("author/{name}")]
+        [Route("authorname/{name}")]
+        public ActionResult<IEnumerable<Book>> GetBooksByAuthor(string author)
+        {
+            var result = books.GetBooksByAuthor(author);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return result;
+        }
+
+        [HttpGet]
+        [Route("{id}/author")]
+        [Route("authorid/{id}")]
+        public ActionResult<string> GetAuthorById(int id)
+        {
+            var name = books.GetAuthorById(id);
+            if (name == null)
+            {
+                return NotFound();
+            }
+            return name;
+        }
+
+        [HttpGet]
+        [Route("author/{author}/year/{year}")]
+        public ActionResult<Book> GetBookByAuthorAndYear(string author, int year)
+        {
+            var book = books.GetBookByAuthorAndYear(author,year);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            return book;
+        }
+
+        [HttpPut]
+        [Route("updatecost/{id}")]
+        public ActionResult<Book> AddCost(int id, [FromForm] Cost cost)
+        {
+            Book result = books.AddCost(id, cost);
+            if (result != null)
+            {
+                return result;
             }
             return NotFound();
         }

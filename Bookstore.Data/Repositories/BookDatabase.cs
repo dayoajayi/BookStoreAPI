@@ -1,5 +1,6 @@
 ﻿using Bookstore.Data.Interfaces;
 using Bookstore.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,14 @@ namespace Bookstore.Data.Repositories
             db = _db;
         }
 
+        public Book AddCost(int id, Cost cost)
+        {
+            Book book = GetBook(id);
+            book.Cost = cost;
+            db.SaveChanges();
+            return book;
+        }
+
         public bool AddNewBook(Book book)
         {
             db.Books.Add(book);
@@ -26,12 +35,29 @@ namespace Bookstore.Data.Repositories
 
         public List<Book> GetAllBooks()
         {
-            return db.Books.ToList();
+            //return db.Books.ToList();
+            return db.Books.Include(x => x.Cost).ToList();
+        }
+
+        public string GetAuthorById(int id)
+        {
+            return db.Books.FirstOrDefault(x => x.Id == id).Author;
         }
 
         public Book GetBook(int id)
         {
-            return db.Books.FirstOrDefault(x => x.Id == id);
+            //return db.Books.FirstOrDefault(x => x.Id == id);
+            return db.Books.Include(x => x.Cost).FirstOrDefault(x => x.Id == id);
+        }
+
+        public Book GetBookByAuthorAndYear(string author, int year)
+        {
+            return db.Books.FirstOrDefault(x => x.Author.Contains(author) && x.PublicationYear == year);
+        }
+
+        public List<Book> GetBooksByAuthor(string author)
+        {
+            return db.Books.Where(x => x.Author.Contains(author)).ToList();
         }
 
         public bool Remove(int id)

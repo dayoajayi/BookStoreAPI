@@ -22,6 +22,11 @@ namespace Bookstore.Data.Repositories
                                         new Book { Id = 9, Title = "Before the Fall", Author = "Hawley, Noah", PublicationYear = 2016, CallNumber = "F HAWLE"}
                                         };
 
+        public Book AddCost(int id, Cost cost)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool AddNewBook(Book book)
         {
             throw new NotImplementedException();
@@ -32,9 +37,24 @@ namespace Bookstore.Data.Repositories
             return books;
         }
 
+        public string GetAuthorById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Book GetBook(int id)
         {
              return books.FirstOrDefault(x => x.Id == id);
+        }
+
+        public Book GetBookByAuthorAndYear(string author, int year)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Book> GetBooksByAuthor(string author)
+        {
+            throw new NotImplementedException();
         }
 
         public bool Remove(int id)

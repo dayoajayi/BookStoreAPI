@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace BookStoreAPI
 {
@@ -32,8 +33,14 @@ namespace BookStoreAPI
             services.AddTransient<IBookRepository, BookDatabase>();
             services.AddControllers();
 
-            var connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\dayob\OneDrive\Documents\Bookstore.mdf;Integrated Security=True;Connect Timeout=30";
+            var connection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\dayob\OneDrive\Documents\Bookstore.mdf;Initial Catalog=BookStore;Integrated Security=True;Connect Timeout=30";
             services.AddDbContext<BookStoreContext>(options => options.UseSqlServer(connection));
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "The Bookstore API", Version = "v1" });
+            });
 
         }
 
@@ -60,10 +67,20 @@ namespace BookStoreAPI
             using(var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<BookStoreContext>();
-                //context.Database.EnsureDeleted();
+               // context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
             }
 
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc), 
+            // specifying the Swagger JSON endpoint
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
+                // To serve the Swagger UI at the apps root (http://localhost:<port>/), set the RoutePrefix to an empty string
+                c.RoutePrefix = string.Empty;
+            });
 
         }
     }

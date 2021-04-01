@@ -13,5 +13,11 @@ namespace Bookstore.Data.Models
         public int PublicationYear { get; set; }
         public bool IsAvailable { get; set; }
         public string CallNumber { get; set; }
+
+        // [ForeignKey("Cost")]
+        public int? CostId { get; set; }
+
+        // Navigation Property
+        public virtual Cost Cost { get; set; }
     }
 }
